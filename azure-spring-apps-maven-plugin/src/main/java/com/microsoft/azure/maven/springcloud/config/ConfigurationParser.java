@@ -15,12 +15,18 @@ import com.microsoft.azure.toolkit.lib.springcloud.config.SpringCloudClusterConf
 import com.microsoft.azure.toolkit.lib.springcloud.config.SpringCloudDeploymentConfig;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 public class ConfigurationParser {
     public SpringCloudAppConfig parse(AbstractMojoBase springMojo) {
@@ -66,12 +72,44 @@ public class ConfigurationParser {
             .deploymentName(Utils.emptyToNull(rawConfig.getDeploymentName()))
             .artifact(artifact != null ? IArtifact.fromFile(artifact) : null)
             .enablePersistentStorage(rawConfig.isEnablePersistentStorage())
-            .environment(Utils.emptyToNull(rawConfig.getEnvironment()))
+            .environment(retrieveEnvironment(rawConfig))
             .capacity(rawConfig.getInstanceCount())
             .jvmOptions(Utils.emptyToNull(rawConfig.getJvmOptions()))
             .memoryInGB(rawConfig.getMemoryInGB())
             .runtimeVersion(Utils.emptyToNull(StringUtils.firstNonEmpty(rawConfig.getRuntimeVersion(), mojo.getRuntimeVersion())))
             .build();
+    }
+
+    private static @Nullable Map<String, String> retrieveEnvironment(final AppDeploymentMavenConfig rawConfig) {
+        final Map<String, String> environment = new HashMap<>();
+        if (hasEnvironmentPropertiesFiles(rawConfig)) {
+            //noinspection DataFlowIssue - handled by hasEnvironmentPropertiesFiles
+            rawConfig.getEnvironmentPropFiles().forEach(file -> addPropertiesFromFile(file, environment));
+        }
+
+        if (rawConfig.getEnvironment() != null) {
+            environment.putAll(rawConfig.getEnvironment());
+        }
+
+        return Utils.emptyToNull(environment);
+    }
+
+    private static boolean hasEnvironmentPropertiesFiles(final AppDeploymentMavenConfig rawConfig) {
+        return rawConfig.getEnvironmentPropFiles() != null && !rawConfig.getEnvironmentPropFiles().isEmpty();
+    }
+
+    private static void addPropertiesFromFile(final File file, final Map<String, String> environment) {
+        readPropertiesFromFile(file).forEach((key, value) -> environment.put(key.toString(), value.toString()));
+    }
+
+    private static @NotNull Properties readPropertiesFromFile(final File file) {
+        Properties props = new Properties();
+        try (InputStream inStream = file.toURI().toURL().openStream()) {
+            props.load(inStream);
+        } catch (Exception e) {
+            AzureMessager.getMessager().warning(String.format("'%s' doesn't exist or isn't a directory", file.getAbsolutePath()));
+        }
+        return props;
     }
 
     public static ConfigurationParser getInstance() {

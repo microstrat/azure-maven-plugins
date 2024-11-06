@@ -11,6 +11,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.maven.model.Resource;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,10 @@ public class AppDeploymentMavenConfig {
     private Boolean enablePersistentStorage;
     @Nullable
     private Map<String, String> environment;
+
+    @Nullable
+    private List<File> environmentPropFiles;
+
     @Nullable
     private List<Resource> resources;
 
