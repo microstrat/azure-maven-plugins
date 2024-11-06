@@ -20,9 +20,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://github.com/microsoft/azure-maven-plugins</connection>
-        <developerConnection>scm:git:git@github.com:microsoft/azure-maven-plugins</developerConnection>
-        <url>https://github.com/microsoft/azure-maven-plugins</url>
+        <connection>scm:git:https://github.com/microstrat/azure-maven-plugins.git</connection>
+        <developerConnection>scm:git:https://github.com/microstrat/azure-maven-plugins.git</developerConnection>
+        <url>https://github.com/microstrat/azure-maven-plugins</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -35,12 +35,20 @@
     </developers>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>Sonatype Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <uniqueVersion>true</uniqueVersion>
+        <repository>
+            <id>releases</id>
+            <url>https://msinexus.ops.microstrat-projects.com/nexus/content/repositories/releases/</url>
+            <uniqueVersion>false</uniqueVersion>
             <layout>default</layout>
+            <name>MSI Repository</name>
+        </repository>
+
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>snapshots</id>
+            <name>MSI Snapshot Repository</name>
+            <layout>default</layout>
+            <url>https://msinexus.ops.microstrat-projects.com/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 

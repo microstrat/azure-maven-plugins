@@ -20,14 +20,21 @@
   <description>A tool that makes working with the Azure SDK for Java more productive.</description>
 
   <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
     <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <id>releases</id>
+      <url>https://msinexus.ops.microstrat-projects.com/nexus/content/repositories/releases/</url>
+      <uniqueVersion>false</uniqueVersion>
+      <layout>default</layout>
+      <name>MSI Repository</name>
     </repository>
+
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>snapshots</id>
+      <name>MSI Snapshot Repository</name>
+      <layout>default</layout>
+      <url>https://msinexus.ops.microstrat-projects.com/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <url>https://github.com/microsoft/azure-maven-plugins</url>
@@ -56,9 +63,9 @@
   </issueManagement>
 
   <scm>
-    <url>https://github.com/Azure/azure-sdk-for-java</url>
-    <connection>scm:git:https://github.com/Azure/azure-sdk-for-java.git</connection>
-    <developerConnection/>
+    <connection>scm:git:https://github.com/microstrat/azure-maven-plugins.git</connection>
+    <developerConnection>scm:git:https://github.com/microstrat/azure-maven-plugins.git</developerConnection>
+    <url>https://github.com/microstrat/azure-maven-plugins</url>
     <tag>HEAD</tag>
   </scm>
 
